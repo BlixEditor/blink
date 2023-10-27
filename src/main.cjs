@@ -768,6 +768,22 @@ const nodes = {
                 triggerUpdate: true,
             }, { step: 1 }
         );
+        ui.addNumberInput(
+            {
+                componentId: "offsetScaleX",
+                label: "Scale Offset X",
+                defaultValue: 0,
+                triggerUpdate: true,
+            }, { step: 0.01 }
+        );
+        ui.addNumberInput(
+            {
+                componentId: "offsetScaleY",
+                label: "Scale Offset Y",
+                defaultValue: 0,
+                triggerUpdate: true,
+            }, { step: 0.01 }
+        );
         const getTransform = addTransformInput(ui, ["position"]);
         ui.addSlider(
             {
@@ -786,6 +802,7 @@ const nodes = {
             if (clump == null) return { "res": null };
 
             const assets = clump.assets;
+            console.log("TRANSFORM", clump.content.transform);
 
             // Construct parent clump
             const parent = {
@@ -803,9 +820,14 @@ const nodes = {
                             y: clump.content.transform.position.y + i * uiInput["offsetY"],
                         },
                         rotation: clump.content.transform.rotation + i * uiInput["offsetRot"],
+                        scale: {
+                            x: (clump.content.transform.scale?.x ?? 1) + i * uiInput["offsetScaleX"],
+                            y: (clump.content.transform.scale?.y ?? 1) + i * uiInput["offsetScaleY"],
+                        }
                     }
                 })),
             }
+            console.log("PARENT", parent.elements[0].scale);
 
             return { "res": { assets, content: parent } };
         });
